@@ -1,0 +1,302 @@
+<!DOCTYPE HTML>
+
+<html>
+	<head>
+		<title>Fernando B Bojorquez</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Header -->
+			<div id="header">
+
+				<div class="top">
+
+					<!-- Logo -->
+						<div id="logo">
+							<span class="image avatar48"><img src="images/DataIcon.png" alt="" /></span>
+							<h1 id="title">Fernando B Bojorquez</h1>
+							<p>Data Analyst</p>
+						</div>
+
+					<!-- Nav -->
+						<nav id="nav">
+							<ul>
+								<li><a href="index.html" ><span class="icon solid fa-home">Back</span></a></li>
+								<li><a href="#top" id="top-link"><span class="icon solid fa-chart-line">Dashboard</span></a></li>
+								<li><a href="#portfolio" id="portfolio-link"><span class="icon solid fa-broom">Cleaning</span></a></li>
+								<li><a href="#analysis2" id="analysis2-link"><span class="icon solid fa-microchip">Analysis</span></a></li>
+								<li><a href="#about" id="about-link"><span class="icon solid fa-database">About the Data</span></a></li>
+						
+
+							</ul>
+						</nav>
+
+				</div>
+
+			</div>
+
+		<!-- Main -->
+			<div id="main">
+
+				<!-- Intro -->
+					<section id="top"  >
+						<div class="container intro" >
+							<p>I created a dashboard that delves into the App Store ecosystem, offering valuable insights on app genres, 
+								ratings, and the language used to describe them. This interactive visualization 
+								allows you to explore trends, discover popular genres, and unravel the words that shape the description of each genre.
+							</p>
+						</div>
+						
+						<div  class="container mar0">
+
+							<div class='tableauPlaceholder' id='viz1685485143077' style='position: relative'><noscript><a href='#'><img alt='AppleStore ' 
+								src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Ap&#47;AppleStore_16850769618590&#47;AppleStore&#47;1_rss.png' 
+								style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' 
+									value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> 
+									<param name='site_root' value='' /><param name='name' value='AppleStore_16850769618590&#47;AppleStore' />
+									<param name='tabs' value='no' /><param name='toolbar' value='yes' />
+									<param name='static_image' 
+									value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Ap&#47;AppleStore_16850769618590&#47;AppleStore&#47;1.png' /> 
+									<param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' />
+									<param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /></object>
+							</div>                
+							<script type='text/javascript'>                    
+							var divElement = document.getElementById('viz1685485143077');                    
+							var vizElement = divElement.getElementsByTagName('object')[0];                    
+							if ( divElement.offsetWidth > 800 ) { vizElement.style.width='1600px';vizElement.style.height='927px';} 
+							else if ( divElement.offsetWidth > 500 ) { vizElement.style.width='1600px';vizElement.style.height='927px';} 
+							else { vizElement.style.width='100%';vizElement.style.height='1727px';}                     
+							var scriptElement = document.createElement('script');                    
+							scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    
+							vizElement.parentNode.insertBefore(scriptElement, vizElement);                
+							</script>
+
+						</div>
+						
+					</section>
+
+				<!-- Portfolio -->
+					<section id="portfolio" class="two">
+						<div class="container">
+							<div class="container intro" >
+								<p>I will showcase process behind the creation of this dashboard, I used Microsoft SQL Server Management Studio and Tableau to analyze
+									data from two tables.  <a href="#about" class="blue">  - About the Data -</a>
+						
+								</p>
+							</div>
+								<h2>Cleaning</h2>
+							<div>								
+								<div class="code">
+									<p>
+										-- Count the rows <br /><br />
+										SELECT COUNT(*) AS row_count <br />
+										FROM AppleStore; <br /><br />
+
+										SELECT COUNT(*) AS row_count<br />
+										FROM appleStore_description;<br /><br />
+
+										-- Check for Data types and column names<br /><br />
+										SELECT column_name, data_type, character_maximum_length, is_nullable<br />
+										FROM information_schema.columns<br />
+										WHERE table_schema = 'dbo' AND table_name = 'AppleStore';<br /><br />
+
+										SELECT column_name, data_type, character_maximum_length, is_nullable<br />
+										FROM information_schema.columns<br />
+										WHERE table_schema = 'dbo' AND table_name = 'appleStore_description';<br /><br />
+
+										-- Check for Null Values<br /><br />
+										SELECT*<br />
+										FROM AppleStore<br />
+										WHERE COALESCE (column1, id, track_name, size_bytes, currency, price, <br />
+										rating_count_tot, rating_count_ver, user_rating, user_rating_ver, ver,<br />
+										cont_rating, prime_genre, sup_devices_num, ipadSc_urls_num, lang_num,<br />
+										vpp_lic<br />
+										)IS NULL;<br /><br />
+
+										SELECT *<br />
+										FROM appleStore_description<br />
+										WHERE COALESCE (id, track_name, size_bytes, app_desc ) IS NULL;<br /><br />
+
+
+										-- Check for Duplicate Values (should be 7197 rows)<br /><br />
+										SELECT id, track_name<br />
+										FROM AppleStore<br />
+										GROUP BY id, track_name;<br /><br />
+
+										SELECT id, track_name<br />
+										FROM appleStore_description<br />
+										GROUP BY id, track_name;<br /><br />
+
+										-- Check for misspelings and outliers<br /><br />
+										SELECT user_rating<br />
+										FROM AppleStore<br />
+										GROUP BY user_rating<br /><br />
+
+										SELECT prime_genre<br />
+										FROM AppleStore<br />
+										GROUP BY prime_genre<br /><br />
+
+										--Since al the prices have a lot of decimals and always end with .99 I will make a new column with rounded prices<br /><br />
+										ALTER TABLE AppleStore<br />
+										ADD rounded_price int;<br />
+										UPDATE AppleStore<br />
+										SET rounded_price = ROUND(price, 0);<br /><br />
+									</p>
+								</div>
+
+							</div>
+						
+
+														
+						
+
+						</div>
+					</section>
+
+				<!-- About Me -->
+
+			
+					<section id="analysis2" class="three">
+						<div class="container">
+							
+							<h2>Analysis</h2>
+													
+							<div class="code">
+								<p>
+									--All apps for each price<br /><br />
+									SELECT rounded_price, COUNT(*) as n_apps	<br />
+									FROM AppleStore<br />
+									GROUP BY rounded_price<br />
+									ORDER BY rounded_price;<br /><br />
+
+									-- Table with Prices and the Genre<br /><br />
+									SELECT price_range, COUNT(*) AS n_apps, prime_genre<br />
+									FROM (<br />
+									SELECT CASE<br />
+									&ensp;&ensp;WHEN rounded_price = 0 THEN 'Free'<br />
+									&ensp;&ensp;WHEN rounded_price BETWEEN 1 AND 5 THEN '1-5'<br />
+									&ensp;&ensp;WHEN rounded_price BETWEEN 6 AND 10 THEN '6-10'<br />
+									&ensp;&ensp;WHEN rounded_price BETWEEN 11 AND 15 THEN '11-15'<br />
+									&ensp;&ensp;WHEN rounded_price BETWEEN 16 AND 20 THEN '16-20'<br />
+									&ensp;&ensp;WHEN rounded_price BETWEEN 21 AND 25 THEN '21-25'<br />
+									&ensp;&ensp;WHEN rounded_price BETWEEN 26 AND 30 THEN '26-30'<br />
+									&ensp;&ensp;ELSE '31+'<br />
+									&ensp;&ensp;END AS price_range, prime_genre<br />
+									FROM AppleStore<br />
+									) AS SQ<br />
+									GROUP BY price_range, prime_genre<br />
+									ORDER BY price_range;<br /><br />
+
+									-- How many apps per genre<br /><br />
+									SELECT prime_genre, COUNT(*) as n_apps	<br />
+									FROM AppleStore<br />
+									GROUP BY prime_genre <br />
+									ORDER BY n_apps DESC<br /><br />
+
+								
+									-- Count words used in app description, rank them and take the top 20<br /><br />
+									WITH joined AS(<br />
+									&ensp;&ensp;SELECT A.prime_genre, D.app_desc<br />
+									&ensp;&ensp;FROM AppleStore AS A<br />
+									&ensp;&ensp;JOIN appleStore_description AS D ON A.id = D.id<br />
+									)<br />
+									SELECT word, word_count, prime_genre, ranked<br />
+									FROM (<br />
+									&ensp;&ensp;SELECT word, COUNT(*) AS word_count, prime_genre,<br />
+									&ensp;&ensp;ROW_NUMBER() OVER (PARTITION BY prime_genre ORDER BY COUNT(*) DESC) AS ranked<br />
+									&ensp;&ensp;FROM (<br />
+									&ensp;&ensp;&ensp;&ensp;SELECT DISTINCT J.app_desc, s.value AS word, prime_genre<br />
+									&ensp;&ensp;&ensp;&ensp;FROM joined AS J<br />
+									&ensp;&ensp;&ensp;&ensp;CROSS APPLY STRING_SPLIT(J.app_desc, ' ') AS S<br />
+									&ensp;&ensp;) AS SQX<br />
+									&ensp;&ensp;GROUP BY word, prime_genre<br />
+									&ensp;&ensp;HAVING  LEN(word) > 3 AND word NOT IN (<br />
+									&ensp;&ensp;'your','from','that','with','this', 'will')<br />									
+									) AS SQZ<br />
+									WHERE ranked<=20 <br />
+									ORDER BY prime_genre, ranked desc;<br /><br />
+
+								</p>
+							</div>
+
+							<div class="container intro" >
+								<p>After conducting the analysis, I created table views to export and utilize the data in Tableau.						
+								</p>
+							</div>
+						</div>
+								
+							
+						
+					</section>
+
+	
+
+				<!-- Contact -->
+			 
+				<section id="about" class="three">
+					<div class="container">
+						
+						<h2>About the Data</h2>
+												
+						<div class="container intro lefty" >
+							<p>
+							Dataset downloaded from 
+<a href="https://www.kaggle.com/datasets/ramamet4/app-store-apple-data-set-10k-apps?select=appleStore_description.csv" class="blue"> - HERE - </a><br /><br />
+
+Data collection date (from API);<br />
+July 2017<br />
+Dimension of the data set;<br />
+7197 rows and 16 columns<br /><br />
+Content:<br /><br />
+appleStore.csv<br />
+    1. "id" : App ID<br />
+    2. "track_name": App Name<br />
+    3. "size_bytes": Size (in Bytes)<br />
+    4. "currency": Currency Type<br />
+    5. "price": Price amount<br />
+    6. "rating_count_tot": User Rating counts (for all version)<br />
+    7. "rating_count_ver": User Rating counts (for current version)<br />
+    8. "user_rating" : Average User Rating value (for all version)<br />
+    9. "user_rating_ver": Average User Rating value (for current version)<br />
+    10. "ver" : Latest version code<br />
+    11. "cont_rating": Content Rating<br />
+    12. "prime_genre": Primary Genre <br />
+    13. "sup_devices.num": Number of supporting devices <br />
+    14. "ipadSc_urls.num": Number of screenshots showed for display<br />
+    15. "lang.num": Number of supported languages<br />
+    16. "vpp_lic": Vpp Device Based Licensing Enabled<br /><br />
+appleStore_description.csv<br />
+    1. id : App ID <br />
+    2. track_name: Application name <br />
+    3. size_bytes: Memory size (in Bytes) <br />
+    4. app_desc: Application description <br /><br />
+Acknowledgements:<br /><br />
+The data was extracted from the iTunes Search API at the Apple Inc website. R and linux web scraping tools were used for this study. <br />
+
+
+							</p>
+						</div>
+					</div>
+							
+						
+					
+				</section>
+			</div>
+
+		
+
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>

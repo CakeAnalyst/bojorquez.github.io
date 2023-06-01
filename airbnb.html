@@ -1,0 +1,305 @@
+<!DOCTYPE HTML>
+
+<html>
+	<head>
+		<title>Fernando B Bojorquez</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+	</head>
+	<body class="is-preload">
+
+		<!-- Header -->
+			<div id="header">
+
+				<div class="top">
+
+					<!-- Logo -->
+						<div id="logo">
+							<span class="image avatar48"><img src="images/DataIcon.png" alt="" /></span>
+							<h1 id="title">Fernando B Bojorquez</h1>
+							<p>Data Analyst</p>
+						</div>
+
+					<!-- Nav -->
+						<nav id="nav">
+							<ul>
+								<li><a href="index.html" ><span class="icon solid fa-home">Back</span></a></li>
+								<li><a href="#top" id="top-link"><span class="icon solid fa-chart-line">Dashboard</span></a></li>
+								<li><a href="#portfolio" id="portfolio-link"><span class="icon solid fa-broom">Cleaning</span></a></li>
+								<li><a href="#analysis2" id="analysis2-link"><span class="icon solid fa-microchip">Analysis</span></a></li>
+								<li><a href="#about" id="about-link"><span class="icon solid fa-database">About the Data</span></a></li>
+								
+
+							</ul>
+						</nav>
+
+				</div>
+
+			</div>
+
+		<!-- Main -->
+			<div id="main">
+
+				<!-- Intro -->
+					<section id="top"  >
+						<div class="container intro" >
+							<p>Introducing an interactive dashboard dedicated to Airbnb in Vancouver, where you can explore the city's neighborhoods, 
+								filter properties based on the number of rooms, prices and look at the occupancy rates throughout the year. 
+								This comprehensive visualization provides a user-friendly interface to navigate the diverse Airbnb offerings.
+							</p>
+						</div>
+						
+						<div  class="container mar0">
+
+							<div class='tableauPlaceholder' id='viz1685504187068' style='position: relative'><noscript><a href='#'><img alt='Dashboard 1 ' 
+								src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Ai&#47;AirbnbNew_16854104167720&#47;Dashboard1&#47;1_rss.png' 
+								style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'>
+									<param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> 
+									<param name='site_root' value='' /><param name='name' value='AirbnbNew_16854104167720&#47;Dashboard1' /><param name='tabs' value='no' />
+									<param name='toolbar' value='yes' />
+									<param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Ai&#47;AirbnbNew_16854104167720&#47;Dashboard1&#47;1.png' /> 
+									<param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' />
+									<param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /></object></div>
+									
+									<script type='text/javascript'>                    
+									var divElement = document.getElementById('viz1685504187068');                    
+									var vizElement = divElement.getElementsByTagName('object')[0];                    
+									if ( divElement.offsetWidth > 800 ) { vizElement.style.width='1500px';vizElement.style.height='1227px';} else if ( divElement.offsetWidth > 500 )
+									 { vizElement.style.width='1500px';vizElement.style.height='1227px';} else { vizElement.style.width='100%';vizElement.style.height='2027px';}                     
+									 var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+									vizElement.parentNode.insertBefore(scriptElement, vizElement);                
+									</script>
+
+						</div>
+						
+					</section>
+
+				<!-- Portfolio -->
+					<section id="portfolio" class="two">
+						<div class="container">
+							<div class="container intro" >
+								<p>I will showcase process behind the creation of this dashboard, I used RStudio and Tableau to analyze
+									data from this dataset.  <a href="#about" class="blue">  - About the Data -</a>
+						
+								</p>
+							</div>
+								<h2>Cleaning</h2>
+							<div>								
+								<div class="code">
+									<p>
+										## Load Libraries <br /><br />
+										library(tidyverse)<br />
+										library(skimr)<br />
+										library(data.table)<br /><br />
+
+										## Loading the dataframes from csv files<br /><br />
+										listings_full <-  read_csv("R/airbnb project/Vancouver Data/listings.csv.gz")<br />
+
+										reviews <-  read_csv("R/airbnb project/Vancouver Data/reviews.csv")<br />
+
+										calendar <-  read_csv("R/airbnb project/Vancouver Data/calendar.csv.gz")<br /><br />
+
+										## View table info to be able to manipulate data<br /><br />
+										skim_without_charts(listings_full)<br />
+										skim_without_charts(reviews)<br />
+										skim_without_charts(calendar)<br /><br />
+
+										## Create a clean and sumarized dataframe from listings<br /><br />
+										listings_summary <- listings_full %>% <br />
+										select(id, name, host_id, host_is_superhost, host_listings_count, <br />
+										&ensp;&ensp;host_verifications, host_identity_verified, neighbourhood_cleansed,<br />
+										&ensp;&ensp;latitude, longitude, property_type, room_type, accommodates,<br />
+										&ensp;&ensp;bathrooms_text, bedrooms, beds, price, minimum_nights,<br />
+										&ensp;&ensp;maximum_nights) %>% <br />
+										na.omit(id, host_id,latitude, longitude,property_type, room_type, accommodates,<br />
+										&ensp;&ensp;bathrooms_text, bedrooms, beds, price, minimum_nights,<br />
+										&ensp;&ensp;maximum_nights) %>% <br />
+										filter(room_type == "Entire home/apt" | room_type == "Private room" & bedrooms == 1)<br /><br />
+										
+
+										## Create a new table to count how many days a year each listing is available<br /><br />
+										calendar_availabilty <- calendar %>%<br />
+										select(listing_id, available) %>%<br />
+										group_by(listing_id) %>% <br />
+										summarize(available_days =sum(available), unavailable_days = n()-sum(available))<br /><br />
+
+
+
+										## Create a complete dataframe merging all the others to make a complete one to work with<br /><br />
+
+										listing_availability <- inner_join(listings_summary,calendar_availabilty , by= c("id"= "listing_id" ))<br />
+
+										airbnb_data <- left_join(listing_availability, reviews_last_year, by= c("id"= "listing_id")) %>% <br />
+										filter(n_reviews >= 1)<br />
+
+										airbnb_data[is.na(airbnb_data)] <- 0  ##to change reviews NA to 0 reviews<br />
+										airbnb_data$price <- as.numeric(gsub('[$,]', '', airbnb_data$price))  ## to change the string price into numbers<br />
+										airbnb_data <- airbnb_data %>% <br />
+										mutate(airbnb_data, estimated_yearly_revenue = price* unavailable_days)<br />
+										
+									</p>
+								</div>
+
+							</div>
+						
+
+														
+						
+
+						</div>
+					</section>
+
+				<!-- About Me -->
+
+			
+					<section id="analysis2" class="three">
+						<div class="container">
+							
+							<h2>Analysis</h2>
+													
+							<div class="code">
+								<p>
+																		
+									## how many listings per host and host status<br /><br />
+									host_listing_status <- airbnb_data %>%<br />
+									group_by(host_id,host_is_superhost) %>% <br />
+									summarise(n_listing = n(), n_reviews= sum(n_reviews) )<br /><br />
+									
+
+									## graph that shows how many listings per host are there<br /><br />
+									listing_per_host <- host_listing_status %>% <br />
+									group_by(n_listing) %>% <br />
+									summarise(n_host = n())<br /><br />
+
+									## how many  Listings are from superhost<br /><br />
+									host_superhost <- airbnb_data %>% <br />
+									group_by(host_is_superhost) %>% <br />
+									summarize(n_host= n())<br /><br />
+
+									## Analysis of types of rooms<br /><br />
+
+									room_reviews <- airbnb_data %>%<br /><br />
+									group_by(room_type)  %>% <br />
+									summarize (mean_reviews = mean(n_reviews), total_reviews = sum(n_reviews),<br />
+									&ensp;&ensp;&ensp;&ensp;n_listings = n(), mean_price = mean(price), mean_ocupied_year = mean(unavailable_days),<br />
+									&ensp;&ensp;&ensp;&ensp;mean_revenue = mean(estimated_yearly_revenue), total_year_rev= sum(estimated_yearly_revenue))<br /><br />
+
+
+									## Checking neighborhood's listings<br /><br />
+									## ended up using only for n_listings per neighbourhood and type of room<br /><br />
+									neighborhood_listings <- airbnb_data %>%<br />
+									group_by(neighbourhood_cleansed, room_type) %>% <br />
+									summarize(n_listing = n(),total_reviews = sum(n_reviews,na.rm=TRUE),<br />
+									&ensp;&ensp;&ensp;&ensp;mean_reviews = mean(n_reviews,na.rm=TRUE), n_superhost = sum(host_is_superhost),<br />
+									&ensp;&ensp;&ensp;&ensp;percent_superhost= 100*sum(host_is_superhost)/n() ,mean_unavailable_days = mean(unavailable_days),<br />
+									&ensp;&ensp;&ensp;&ensp;mean_price = mean(price), mean_bedrooms = mean(bedrooms), mean_minimun_nights = mean(minimum_nights),<br />
+									&ensp;&ensp;&ensp;&ensp;total_estimated_revenue = sum(estimated_yearly_revenue), mean_year_rev = mean(estimated_yearly_revenue)) %>% <br /><br />
+
+
+
+									## Table for number of bedrooms<br />
+									## used the AVG price per night and the n_listings per number of rooms<br /><br />
+									listing_bedrooms_number <- airbnb_data %>% <br />
+									group_by(bedrooms, room_type) %>% <br />
+									summarize(n_listings = n(), mean_reviews = mean(n_reviews), total_reviews = sum(n_reviews),<br />
+									&ensp;&ensp;&ensp;&ensp;mean_price = mean(price), mean_ocupied_year = mean(unavailable_days),<br />
+									&ensp;&ensp;&ensp;&ensp;mean_year_rev =mean(price)*mean(unavailable_days),<br />
+									&ensp;&ensp;&ensp;&ensp;tot_year_rev = sum(estimated_yearly_revenue)) %>% <br />
+									filter( room_type == "Entire home/apt" )<br /><br />
+
+
+									## Table to make the map<br />
+									## Changed the bool value to string to make it clear (Superhost)<br /><br />
+									map_vancouver <- airbnb_data %>%<br />
+									select(id, host_is_superhost, neighbourhood_cleansed,latitude, longitude,<br />
+									&ensp;&ensp;&ensp;&ensp;property_type, room_type, bedrooms, beds, price) %>%<br />
+									mutate(host_is_superhost= if_else(host_is_superhost == TRUE,'Superhost', 'Normal Host'))<br /><br />
+
+
+									## Create a table to see how many days a year are rooms available<br /><br />
+									calendar_rooms <- inner_join(airbnb_data,calendar, by= c("id"= "listing_id" )) %>%<br />
+									group_by(bedrooms, room_type, date, available) %>% <br />
+									summarize (n_listings = n()) %>% <br />
+									filter (available == FALSE)<br /><br />
+
+									## Export dataframes in .csv format to use in Tableau<br /><br />
+
+									fwrite(airbnb_data, <br />
+										"C:\\Users\\R\\airbnb project\\exported_dataframes\\airbnb_data.csv")<br />
+
+									fwrite(room_reviews, <br />
+										"C:\\Users\\R\\airbnb project\\exported_dataframes\\room_reviews.csv")<br />
+
+									fwrite(neighborhood_listings, <br />
+										"C:\\Users\\R\\airbnb project\\exported_dataframes\\neighborhood_listings.csv")<br />
+
+									fwrite(listing_bedrooms_number, <br />
+										"C:\\Users\\R\\airbnb project\\exported_dataframes\\listing_bedrooms_number.csv")<br />
+
+									fwrite(map_vancouver, <br />
+										"C:\\Users\\R\\airbnb project\\exported_dataframes\\map_vancouver.csv")<br />
+
+									fwrite(calendar_rooms, <br />
+										"C:\\Users\\R\\airbnb project\\exported_dataframes\\calendar_rooms.csv")<br />
+
+								
+
+								</p>
+							</div>
+
+
+						</div>
+								
+							
+						
+					</section>
+
+	
+
+				<!-- Contact -->
+			 
+				<section id="about" class="three">
+					<div class="container">
+						
+						<h2>About the Data</h2>
+												
+						<div class="container intro lefty" >
+							<p>
+							Dataset downloaded from 
+<a href="http://insideairbnb.com/get-the-data" class="blue"> - HERE - </a><br /><br />
+
+Vancouver, British Columbia, Canada<br />
+14 March, 2023 <br /><br />
+
+Vancouver	listings.csv	<br />
+------Summary information and metrics for listings in Vancouver (good for visualisations).<br />
+Vancouver	reviews.csv	   <br /> 
+------Summary Review data and Listing ID (to facilitate time based analytics and visualisations linked to a listing).<br />
+Vancouver	neighbourhoods.csv	<br />
+------Neighbourhood list for geo filter. Sourced from city or open source GIS files.<br />
+
+
+							</p>
+						</div>
+					</div>
+							
+						
+					
+				</section>
+			</div>
+
+		
+
+
+		<!-- Scripts -->
+			<script src="assets/js/jquery.min.js"></script>
+			<script src="assets/js/jquery.scrolly.min.js"></script>
+			<script src="assets/js/jquery.scrollex.min.js"></script>
+			<script src="assets/js/browser.min.js"></script>
+			<script src="assets/js/breakpoints.min.js"></script>
+			<script src="assets/js/util.js"></script>
+			<script src="assets/js/main.js"></script>
+
+	</body>
+</html>
